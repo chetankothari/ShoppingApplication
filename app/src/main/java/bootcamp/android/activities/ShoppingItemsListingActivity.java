@@ -2,6 +2,10 @@ package bootcamp.android.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +18,7 @@ import bootcamp.android.R;
 import bootcamp.android.adapters.ShoppingItemsListAdapter;
 import bootcamp.android.models.Product;
 import bootcamp.android.repositories.ProductRepository;
+import bootcamp.android.services.SayHelloService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +33,14 @@ public class ShoppingItemsListingActivity extends Activity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.main);
+
+    ComponentName componentName = new ComponentName(this, SayHelloService.class);
+    JobInfo job = new JobInfo.Builder(1, componentName)
+            .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+            .build();
+    JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+    jobScheduler.schedule(job);
+
     if(savedInstanceState == null || savedInstanceState.getParcelableArrayList(PRODUCTS_KEY) == null){
       final ProgressDialog progressDialog = ProgressDialog.show(this, "", "Loading...", true, true);
       Callback<ArrayList<Product>> callback = productsCallback(progressDialog);

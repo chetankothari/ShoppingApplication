@@ -11,5 +11,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.ProductDetailsActivity"/>
-    </application>
+      <service
+          android:name=".services.SayHelloService"
+          android:permission="android.permission.BIND_JOB_SERVICE"
+          android:exported="true"/>
+  </application>
 </manifest>
