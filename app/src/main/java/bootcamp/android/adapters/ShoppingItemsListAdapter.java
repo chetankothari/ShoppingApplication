@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import bootcamp.android.R;
@@ -61,8 +62,11 @@ public class ShoppingItemsListAdapter extends RecyclerView.Adapter<ShoppingItems
       Intent intent = new Intent(context.getApplicationContext(), ProductDetailsActivity.class);
       Product product = products.get(getAdapterPosition());
       intent.putExtra(Constants.PRODUCT_KEY, product);
+      ArrayList<Product> productArrayList = new ArrayList<>(products.size());
+      productArrayList.addAll(products);
+      intent.putParcelableArrayListExtra(Constants.PRODUCTS_KEY, productArrayList);
+      intent.putExtra(Constants.CURRENT_PRODUCT_KEY, getAdapterPosition());
       context.startActivity(intent);
-
     }
   }
 }
