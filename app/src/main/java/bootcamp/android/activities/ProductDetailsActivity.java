@@ -3,6 +3,7 @@ package bootcamp.android.activities;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,24 @@ public class ProductDetailsActivity extends FragmentActivity {
   private void renderProduct() {
     Product product = products.get(currentProductPosition);
     ProductDetailsFragment productDetailsFragment = ProductDetailsFragment.newInstance(product);
+    Button previousButton = findViewById(R.id.previous_product);
+    Button nextButton = findViewById(R.id.next_product);
+
+    if (isLastProduct()) {
+      disableButton(nextButton);
+      enableButton(previousButton);
+    }
+
+    if (isFirstProduct()) {
+      disableButton(previousButton);
+      enableButton(nextButton);
+    }
+
+    if (!isFirstProduct() && !isLastProduct()) {
+      enableButton(nextButton);
+      enableButton(previousButton);
+    }
+
     getSupportFragmentManager()
             .beginTransaction()
             .replace(R.id.product_details_fragment, productDetailsFragment)
@@ -47,5 +66,21 @@ public class ProductDetailsActivity extends FragmentActivity {
   public void previous(View view) {
     currentProductPosition--;
     renderProduct();
+  }
+
+  private boolean isFirstProduct() {
+    return currentProductPosition <= 0;
+  }
+
+  private boolean isLastProduct() {
+    return currentProductPosition >= products.size() - 1;
+  }
+
+  private void enableButton(Button button) {
+    button.setEnabled(true);
+  }
+
+  private void disableButton(Button button) {
+    button.setEnabled(false);
   }
 }

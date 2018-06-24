@@ -34,7 +34,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
-        android:onClick="next" />
+        android:onClick="previous" />
 
     <Button
         android:id="@+id/next_product"
@@ -46,6 +46,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/previous_product"
-        android:onClick="previous"/>
+        android:onClick="next"/>
 
 </android.support.constraint.ConstraintLayout>
