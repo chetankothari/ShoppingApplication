@@ -1,14 +1,16 @@
 package bootcamp.android.activities;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
 
 import bootcamp.android.R;
-import bootcamp.android.fragments.ProductDetailsFragment;
+import bootcamp.android.adapters.ProductViewPagerAdapter;
 import bootcamp.android.models.Product;
 
 import static bootcamp.android.constants.Constants.CURRENT_PRODUCT_KEY;
@@ -17,70 +19,20 @@ import static bootcamp.android.constants.Constants.PRODUCTS_KEY;
 
 public class ProductDetailsActivity extends FragmentActivity {
 
-  private int currentProductPosition;
-  private ArrayList<Product> products;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.product_details_container);
-
     Bundle extraArguments = getIntent().getExtras();
-    products = extraArguments.getParcelableArrayList(PRODUCTS_KEY);
-    currentProductPosition = extraArguments.getInt(CURRENT_PRODUCT_KEY);
-    renderProduct();
-  }
 
-  private void renderProduct() {
-    Product product = products.get(currentProductPosition);
-    ProductDetailsFragment productDetailsFragment = ProductDetailsFragment.newInstance(product);
-    Button previousButton = findViewById(R.id.previous_product);
-    Button nextButton = findViewById(R.id.next_product);
+    ArrayList<Product> products = extraArguments.getParcelableArrayList(PRODUCTS_KEY);
+    int currentProductPosition = extraArguments.getInt(CURRENT_PRODUCT_KEY);
 
-    if (isLastProduct()) {
-      disableButton(nextButton);
-      enableButton(previousButton);
-    }
+    ProductViewPagerAdapter productViewPagerAdapter = new ProductViewPagerAdapter(getSupportFragmentManager(), products);
 
-    if (isFirstProduct()) {
-      disableButton(previousButton);
-      enableButton(nextButton);
-    }
-
-    if (!isFirstProduct() && !isLastProduct()) {
-      enableButton(nextButton);
-      enableButton(previousButton);
-    }
-
-    getSupportFragmentManager()
-            .beginTransaction()
-            .replace(R.id.product_details_fragment, productDetailsFragment)
-            .commit();
-  }
-
-  public void next(View view) {
-    currentProductPosition++;
-    renderProduct();
-  }
-
-  public void previous(View view) {
-    currentProductPosition--;
-    renderProduct();
-  }
-
-  private boolean isFirstProduct() {
-    return currentProductPosition <= 0;
-  }
-
-  private boolean isLastProduct() {
-    return currentProductPosition >= products.size() - 1;
-  }
-
-  private void enableButton(Button button) {
-    button.setEnabled(true);
-  }
-
-  private void disableButton(Button button) {
-    button.setEnabled(false);
+    ViewPager viewPager = findViewById(R.id.view_pager);
+    viewPager.setAdapter(productViewPagerAdapter);
+    viewPager.setCurrentItem(currentProductPosition);
   }
 }
